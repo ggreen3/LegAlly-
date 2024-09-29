@@ -1,0 +1,122 @@
+<html>
+<head>
+    <title>Legal Assistant Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --color-1: #fff2f2; /* Light Pink */
+    --color-2: #d6a4a4; /* Medium Pink */
+    --color-3: #a44c69; /* Dark Pink */
+    --color-4: #7d3636; /* Deep Red */
+    --color-5: #f8b87a; /* Soft Orange */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-1);
+    color: var(--color-4);
+}
+
+.dark-mode {
+    background-color: var(--color-3); /* Dark Pink */
+    color: var(--color-1); /* Light Pink */
+}
+
+input, select, button {
+    margin: 0.5rem 0;
+}
+
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="container mx-auto p-4">
+        <h1 class="text-xl">Welcome to The Check Bar - Your Legal Information Assistant</h1>
+        <p>Get easy-to-understand answers and next steps on all things legal.</p>
+
+        <form id="legalForm" class="my-4">
+            <div class="mb-4">
+                <label for="legalQuestion" class="block">Legal question or topic:</label>
+                <input type="text" id="legalQuestion" placeholder="Enter your legal question" class="input border border-gray-700 bg-gray-800 text-white p-2 w-full">
+            </div>
+            <div class="mb-4">
+                <label for="userType" class="block">User Type:</label>
+                <select id="userType" class="border border-gray-700 bg-gray-800 text-white p-2 w-full">
+                    <option value="Legal professional">Legal professional (lawyer, paralegal, etc.)</option>
+                    <option value="Law student">Law student</option>
+                    <option value="General public">General public/non-legal background</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="legalSituation" class="block">Specific legal situation or query:</label>
+                <input type="text" id="legalSituation" placeholder="Describe your situation" class="input border border-gray-700 bg-gray-800 text-white p-2 w-full">
+            </div>
+            <div class="mb-4">
+                <label for="areaOfLaw" class="block">Area of Law:</label>
+                <select id="areaOfLaw" class="border border-gray-700 bg-gray-800 text-white p-2 w-full">
+                    <option value="Understanding a legal concept or procedure">Understanding a legal concept or procedure</option>
+                    <option value="Seeking information on a specific case or judgment">Seeking information on a specific case or judgment</option>
+                    <option value="Looking for guidance on next steps for a legal situation">Looking for guidance on next steps for a legal situation</option>
+                    <option value="General legal research or reference material">General legal research or reference material</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="location" class="block">Location (State/Province/Country):</label>
+                <input type="text" id="location" placeholder="Your Location" class="input border border-gray-700 bg-gray-800 text-white p-2 w-full">
+            </div>
+            <button type="button" id="submitBtn" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">Bar check!</button>
+        </form>
+
+        <section id="output" class="mt-8 p-4 bg-gray-700 text-white rounded"></section>
+
+        <footer class="mt-12 text-center">
+            <a href="#" class="text-white">The Check Bar</a>
+        </footer>
+    </div>
+
+    <script>
+        const form = document.getElementById("legalForm");
+        const output = document.getElementById("output");
+        const submitBtn = document.getElementById("submitBtn");
+
+        submitBtn.addEventListener("click", () => {
+            const legalQuestion = document.getElementById("legalQuestion").value;
+            const userType = document.getElementById("userType").value;
+            const legalSituation = document.getElementById("legalSituation").value;
+            const areaOfLaw = document.getElementById("areaOfLaw").value;
+            const location = document.getElementById("location").value;
+
+            const prompt = `Generate an explanation of the legal concept of ${legalQuestion} tailored for a ${userType} seeking ${areaOfLaw} in ${location}. Provide clear and concise guidance on next steps for the user's specific legal situation based in ${location}.`;
+
+            const websocket = new WebSocket("wss://backend.buildpicoapps.com/ask_ai_streaming_v2");
+
+            websocket.addEventListener("open", () => {
+                websocket.send(JSON.stringify({
+                    appId: "even-American",
+                    prompt: prompt,
+                }));
+            });
+
+            websocket.addEventListener("message", (event) => {
+                console.log(event.data);
+                output.innerText = `${output.innerText}${event.data}`;
+            });
+
+            websocket.addEventListener("close", (event) => {
+                console.log("Connection closed", event.code, event.reason);
+                if (event.code != 1000) {
+                    alert("Oops, we ran into an error. Refresh the page and try again.");
+                }
+            });
+
+            websocket.addEventListener("error", (error) => {
+              console.log('WebSocket error', error);
+              alert("Oops, we ran into an error. Refresh the page and try again.");
+            });
+
+            // Clear the output section on new request
+            output.innerText = '';
+        });
+    </script>
+</body>
+</html>

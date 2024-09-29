@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Case Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a202c;
+            color: #f7fafc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        a {
+            color: #f7fafc;
+        }
+        .container {
+            max-width: 640px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2d3748;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .input, .textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #4a5568;
+            border-radius: 0.375rem;
+            background-color: #1a202c;
+            color: #f7fafc;
+            font-size: 1rem;
+        }
+        .textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4fd1c5;
+            color: #1a202c;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background-color: #38b2ac;
+            transform: scale(1.05);
+        }
+        #output {
+            background-color: #2d3748;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-top: 1.5rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem 0;
+        }
+        footer p {
+            margin: 0;
+        }
+        footer a {
+            color: #4fd1c5;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        footer a:hover {
+            color: #38b2ac;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Legal Case Analysis</h1>
+        <form id="analysisForm">
+            <div class="mb-4">
+                <label for="caseDescription">Case Description</label>
+                <textarea id="caseDescription" class="textarea" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="keyIssues">Key issues or concerns</label>
+                <textarea id="keyIssues" class="textarea" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="legalDocuments">Relevant legal documents/evidence</label>
+                <input type="text" id="legalDocuments" class="input" required>
+            </div>
+            <div class="mb-4">
+                <label for="previousActions">Previous legal actions</label>
+                <input type="text" id="previousActions" class="input" required>
+            </div>
+            <div class="mb-4">
+                <label for="previousCommunications">Previous legal communications</label>
+                <input type="text" id="previousCommunications" class="input" required>
+            </div>
+            <div class="mb-4">
+                <label for="jurisdiction">Jurisdiction/country/location</label>
+                <input type="text" id="jurisdiction" class="input" required>
+            </div>
+            <button type="button" id="submitButton" class="button">Unleash The Legal Analysis!</button>
+        </form>
+        <section id="output">
+            <!-- Results will appear here -->
+        </section>
+    </div>
+    <footer>
+        <p>Ggreen</p>
+    </footer>
+    
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const caseDescription = document.getElementById('caseDescription').value;
+            const keyIssues = document.getElementById('keyIssues').value;
+            const legalDocuments = document.getElementById('legalDocuments').value;
+            const previousActions = document.getElementById('previousActions').value;
+            const previousCommunications = document.getElementById('previousCommunications').value;
+            const jurisdiction = document.getElementById('jurisdiction').value;
+            
+            const prompt = `generate a detailed legal analysis for the following case:
+Case Description: ${caseDescription}
+Key issues or concerns: ${keyIssues}
+Relevant legal documents/evidence: ${legalDocuments}
+Previous legal actions: ${previousActions}
+Previous legal communications: ${previousCommunications}
+Jurisdiction/country/location: ${jurisdiction}`;
+            
+            const websocket = new WebSocket('wss://backend.buildpicoapps.com/ask_ai_streaming_v2');
+            const output = document.getElementById('output');
+            output.innerText = ''; // Clear output
+            
+            websocket.addEventListener("open", () => {
+                websocket.send(
+                    JSON.stringify({
+                        appId: "moment-red",
+                        prompt: prompt,
+                    })
+                );
+            });
+            
+            websocket.addEventListener("message", (event) => {
+                console.log(event.data);
+                output.innerText = `${output.innerText}${event.data}`;
+            });
+            
+            websocket.addEventListener("close", (event) => {
+                console.log("Connection closed", event.code, event.reason);
+                if (event.code != 1000) {
+                    alert("Oops, we ran into an error. Refresh the page and try again.");
+                }
+            });
+            
+            websocket.addEventListener("error", (error) => {
+              console.log('WebSocket error', error);
+              alert("Oops, we ran into an error. Refresh the page and try again.");
+            });
+        });
+    </script>
+</body>
+</html>

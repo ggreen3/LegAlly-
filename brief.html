@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>BriefCase: Your Virtual Law Firm</title>
+    <link rel="stylesheet" href="brief.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        /* Style for chatbot button */
+        #chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        #chatbot-button:hover {
+            background-color: #0056b3;
+        }
+        /* Additional style for card */
+        .card {
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 300px;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to BriefCase</h1>
+        <p>Your Virtual Law Firm</p>
+    </header>
+    <main>
+       <section id="marketplace">
+           <h2>Legal Marketplace</h2>
+           <div class="marketplace-cards d-flex flex-wrap justify-content-center">
+               <!-- Card for Advocates -->
+               <div class="card" onclick="openAdvocatePage()">
+                   <h3><i class="fas fa-user-tie"></i> Advocates</h3>
+                   <p>Post the jobs you handle, the various categories you handle, and the range of pricing based on the type of job.</p>
+               </div>
+               <!-- Card for Clients -->
+               <div class="card" onclick="openClientPage()">
+                   <h3><i class="fas fa-user"></i> Clients</h3>
+                   <p>Click here to post ads for the type of advocate you need and their average price range.</p>
+               </div>
+               <!-- Card for Pupil/Intern/Paralegal -->
+               <div class="card" onclick="openParalegalPage()">
+                   <h3><i class="fas fa-graduation-cap"></i> Pupil/Intern/Paralegal</h3>
+                   <p>Explore opportunities to gain experience and learn from experienced legal professionals.</p>
+               </div>
+             <!-- Card for Law Firms -->
+             <div class="card" onclick="openLawFirmPage()">
+             <h3><i class="fas fa-building"></i> Your Virtual Law Firm</h3>
+             <p>Launch and run your own virtual law firm and offer exceptional legal services to clients worldwide.</p>
+             </div>
+
+           </div>
+       </section>
+    </main>
+
+    <!-- Chatbot Button -->
+    <button id="chatbot-button" onclick="openChatbot()">
+        <i class="fas fa-comment"></i> <!-- Font Awesome chat icon -->
+    </button>
+
+    <!-- Chatbot Script -->
+    <script>
+        function openChatbot() {
+            window.open("chatbot.html", "_blank", "width=400,height=600");
+        }
+
+        function openAdvocatePage() {
+            // Redirect to advocate page
+            window.location.href = "advocate.html";
+        }
+
+        function openClientPage() {
+            // Redirect to client page
+            window.location.href = "client.html";
+        }
+
+        function openParalegalPage() {
+            // Redirect to pupil/intern/paralegal page
+            window.location.href = "paralegal.html";
+        }
+
+        function openLawFirmPage() {
+            // Redirect to law firm page
+            window.location.href = "law_firm.html";
+        }
+    </script>
+</body>
+</html>
