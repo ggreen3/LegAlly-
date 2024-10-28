@@ -55,13 +55,19 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert('BiefCase Early Access request submitted successfully!');
-                    document.getElementById('legalForm').style.display = 'none';
-                    document.getElementById('thankYouMessage').style.display = 'block';
-                } else {
-                    alert('There was an error submitting your request. Please try again.');
-                    console.error(data);
-                }
+    alert('BriefCase Early Access request submitted successfully!');
+    document.getElementById('legalForm').style.display = 'none';
+    document.getElementById('thankYouMessage').style.display = 'block';
+    
+    // Delay the redirection by 2 seconds (2000 milliseconds)
+    setTimeout(function() {
+        window.location.href = 'brief.html';
+    }, 2000);
+} else {
+    alert('There was an error submitting your request. Please try again.');
+    console.error(data);
+}
+
             })
             .catch(error => {
                 alert('There was an error submitting your request. Please try again.');
