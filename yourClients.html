@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Clients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Your custom CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #2c2c34; /* Dark background for dark mode */
+            color: #f8f9fa; /* Light text color */
+        }
+        #clientList {
+            margin-top: 20px;
+        }
+        .client-card {
+            border: none;
+            border-radius: 0.5rem;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #343a40; /* Darker card background */
+            transition: transform 0.2s, box-shadow 0.2s; /* Transition effects */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+        .client-card:hover {
+            transform: scale(1.03); /* Scale up on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Deep shadow on hover */
+        }
+        .badge {
+            background-color: #007bff; /* Bootstrap primary color */
+        }
+        .add-client-btn {
+            margin-bottom: 20px;
+        }
+        .modal-header {
+            background-color: #007bff; /* Consistent with button colors */
+            color: white;
+        }
+        .form-control {
+            margin-bottom: 15px; /* Spacing for form inputs */
+        }
+        .contact-buttons a {
+            margin-right: 10px; /* Spacing between contact buttons */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Your Clients <span class="badge" id="clientCount">0</span></h1>
+        
+        <!-- Add Client Button -->
+        <button class="btn btn-success add-client-btn" data-toggle="modal" data-target="#addClientModal">Add New Client</button>
+        
+        <!-- Search Bar -->
+        <input type="text" id="searchInput" class="form-control" placeholder="Search Clients" onkeyup="searchFunction()">
+
+        <!-- Client List -->
+        <div id="clientList" class="row">
+            <!-- Dynamic client cards will be injected here -->
+        </div>
+
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center" id="paginationControls">
+                <li class="page-item"><a class="page-link" href="#" onclick="previousPage()">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#" onclick="nextPage()">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel">Add New Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addClientForm">
+                        <input type="text" class="form-control" id="clientName" placeholder="Client Name" required>
+                        <input type="email" class="form-control" id="clientEmail" placeholder="Email" required>
+                        <input type="tel" class="form-control" id="clientPhone" placeholder="Phone" required>
+                        <select class="form-control" id="clientStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addClient()">Add Client</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Client Modal -->
+    <div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="editClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClientModalLabel">Edit Client</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editClientForm">
+                        <input type="hidden" id="editClientId">
+                        <input type="text" class="form-control" id="editClientName" placeholder="Client Name" required>
+                        <input type="email" class="form-control" id="editClientEmail" placeholder="Email" required>
+                        <input type="tel" class="form-control" id="editClientPhone" placeholder="Phone" required>
+                        <select class="form-control" id="editClientStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveClient()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample client data (this could come from an API)
+        let clients = [
+            { id: 1, name: "Alice Smith", email: "alice@example.com", phone: "123-456-7890", status: "Active" },
+            { id: 2, name: "Bob Johnson", email: "bob@example.com", phone: "234-567-8901", status: "Inactive" },
+            { id: 3, name: "Charlie Brown", email: "charlie@example.com", phone: "345-678-9012", status: "Active" },
+            { id: 4, name: "David Wilson", email: "david@example.com", phone: "456-789-0123", status: "Active" },
+            // Add more clients as needed
+        ];
+
+        let currentPage = 1;
+        const clientsPerPage = 2; // Number of clients to display per page
+
+        // Function to display clients on the page
+        function displayClients() {
+            const start = (currentPage - 1) * clientsPerPage;
+            const end = start + clientsPerPage;
+            const paginatedClients = clients.slice(start, end);
+            
+            // Clear the client list before rendering
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = '';
+
+            // Create client cards
+            paginatedClients.forEach(client => {
+                const clientCard = document.createElement('div');
+                clientCard.className = 'col-md-6';
+                clientCard.innerHTML = `
+                    <div class="client-card">
+                        <h5>${client.name}</h5>
+                        <p><strong>Email:</strong> <a href="mailto:${client.email}" style="color: #007bff;">${client.email}</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:${client.phone}" style="color: #007bff;">${client.phone}</a></p>
+                        <p><strong>Status:</strong> <span class="badge ${client.status === 'Active' ? 'badge-success' : 'badge-danger'}">${client.status}</span></p>
+                        <div class="contact-buttons">
+                            <a href="https://wa.me/${client.phone.replace(/\D/g, '')}" class="btn btn-success btn-sm" target="_blank">Chat on WhatsApp</a>
+                        </div>
+                        <button class="btn btn-primary" onclick="viewClient(${client.id})">View</button>
+                        <button class="btn btn-secondary" onclick="editClient(${client.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteClient(${client.id})">Delete</button>
+                    </div>
+                `;
+                clientList.appendChild(clientCard);
+            });
+
+            document.getElementById('clientCount').innerText = clients.length;
+            updatePaginationControls();
+        }
+
+        // Add a new client
+        function addClient() {
+            const name = document.getElementById('clientName').value;
+            const email = document.getElementById('clientEmail').value;
+            const phone = document.getElementById('clientPhone').value;
+            const status = document.getElementById('clientStatus').value;
+
+            const newClient = {
+                id: clients.length + 1,
+                name: name,
+                email: email,
+                phone: phone,
+                status: status
+            };
+            clients.push(newClient);
+            displayClients();
+            $('#addClientModal').modal('hide'); // Close the modal
+            document.getElementById('addClientForm').reset(); // Reset the form
+        }
+
+        // Edit a client
+        function editClient(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            document.getElementById('editClientId').value = client.id;
+            document.getElementById('editClientName').value = client.name;
+            document.getElementById('editClientEmail').value = client.email;
+            document.getElementById('editClientPhone').value = client.phone;
+            document.getElementById('editClientStatus').value = client.status;
+            $('#editClientModal').modal('show'); // Show the edit modal
+        }
+
+        // Save the edited client
+        function saveClient() {
+            const clientId = parseInt(document.getElementById('editClientId').value);
+            const updatedClient = {
+                id: clientId,
+                name: document.getElementById('editClientName').value,
+                email: document.getElementById('editClientEmail').value,
+                phone: document.getElementById('editClientPhone').value,
+                status: document.getElementById('editClientStatus').value
+            };
+
+            const index = clients.findIndex(c => c.id === clientId);
+            clients[index] = updatedClient;
+            displayClients();
+            $('#editClientModal').modal('hide'); // Close the modal
+        }
+
+        // Delete a client
+        function deleteClient(clientId) {
+            if (confirm("Are you sure you want to delete this client?")) {
+                clients = clients.filter(c => c.id !== clientId);
+                displayClients();
+            }
+        }
+
+        // Function to view client details
+        function viewClient(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            alert(`Viewing Client:\nName: ${client.name}\nEmail: ${client.email}\nPhone: ${client.phone}\nStatus: ${client.status}`);
+        }
+
+        // Function to search for clients
+        function searchFunction() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const filteredClients = clients.filter(client => client.name.toLowerCase().includes(searchInput));
+            displayFilteredClients(filteredClients);
+        }
+
+        // Function to display filtered clients based on search
+        function displayFilteredClients(filteredClients) {
+            const clientList = document.getElementById('clientList');
+            clientList.innerHTML = ''; // Clear the current list
+
+            filteredClients.forEach(client => {
+                const clientCard = document.createElement('div');
+                clientCard.className = 'col-md-6';
+                clientCard.innerHTML = `
+                    <div class="client-card">
+                        <h5>${client.name}</h5>
+                        <p><strong>Email:</strong> <a href="mailto:${client.email}" style="color: #007bff;">${client.email}</a></p>
+                        <p><strong>Phone:</strong> <a href="tel:${client.phone}" style="color: #007bff;">${client.phone}</a></p>
+                        <p><strong>Status:</strong> <span class="badge ${client.status === 'Active' ? 'badge-success' : 'badge-danger'}">${client.status}</span></p>
+                        <div class="contact-buttons">
+                            <a href="https://wa.me/${client.phone.replace(/\D/g, '')}" class="btn btn-success btn-sm" target="_blank">Chat on WhatsApp</a>
+                        </div>
+                        <button class="btn btn-primary" onclick="viewClient(${client.id})">View</button>
+                        <button class="btn btn-secondary" onclick="editClient(${client.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteClient(${client.id})">Delete</button>
+                    </div>
+                `;
+                clientList.appendChild(clientCard);
+            });
+
+            document.getElementById('clientCount').innerText = filteredClients.length;
+            updatePaginationControls();
+        }
+
+        // Pagination functions
+        function nextPage() {
+            if ((currentPage * clientsPerPage) < clients.length) {
+                currentPage++;
+                displayClients();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayClients();
+            }
+        }
+
+        // Update pagination controls
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(clients.length / clientsPerPage);
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.style.display = (totalPages > 1) ? 'block' : 'none';
+        }
+
+        // Initial display
+        displayClients();
+    </script>
+</body>
+</html>
