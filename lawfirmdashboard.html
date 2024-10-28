@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>BriefCase SaaS Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .sidebar {
+            background-color: #0056b3;
+            color: white;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: width 0.3s;
+        }
+        .sidebar h2 {
+            text-align: center;
+            font-size: 24px;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 20px;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            padding: 10px 20px;
+            transition: background 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #004092;
+        }
+        .sidebar ul li a .fa {
+            margin-right: 10px;
+        }
+        .sidebar ul li a .badge {
+            float: right;
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .card {
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #0056b3;
+            color: white;
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .graph-container {
+            height: 300px;
+        }
+        footer {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-left: 250px;
+        }
+        .navbar {
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .navbar .search-bar {
+            width: 50%;
+            display: flex;
+            align-items: center;
+        }
+        .navbar .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .navbar .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        .navbar .user-profile img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1e1e1e;
+            color: white;
+        }
+        .sidebar.dark-mode {
+            background-color: #1e1e1e;
+        }
+        .card.dark-mode {
+            background-color: #2a2a2a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>BriefCase</h2>
+        <ul>
+            <li><a href="#dashboard"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="yourClients.html"><i class="fa fa-users"></i> Clients <span class="badge">4</span></a></li>
+            <li><a href="cases.html"><i class="fa fa-gavel"></i> Cases <span class="badge">8</span></a></li>
+            <li><a href="document.html"><i class="fa fa-file-alt"></i> Documents</a></li>
+            <li><a href="team.html"><i class="fa fa-user-friends"></i> Team</a></li>
+            <li><a href="financials.html"><i class="fa fa-dollar-sign"></i> Financials</a></li>
+            <li><a href="settings.html"><i class="fa fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search clients, cases, documents..." onkeyup="searchFunction()">
+            </div>
+            <div class="user-profile">
+                <img src="image.png" alt="User Profile" width="40" height="40">
+                <span>John Doe</span>
+                <div class="dark-mode-toggle">
+                    <i class="fa fa-sun"></i>
+                    <label class="switch">
+                        <input type="checkbox" id="darkModeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <i class="fa fa-moon"></i>
+                </div>
+            </div>
+        </nav>
+
+        <section id="dashboard">
+            <h2 class="mb-4">Dashboard</h2>
+            <div class="row">
+                <!-- Active Clients Card -->
+                <div class="col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Active Clients
+                        </div>
+                        <div class="card-body">
+                            <h3>50</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Ongoing Cases Card -->
+                <div class="col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Ongoing Cases
+                        </div>
+                        <div class="card-body">
+                            <h3>80</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Documents Card -->
+                <div class="col-md-4 col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Documents
+                        </div>
+                        <div class="card-body">
+                            <h3>200</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="card mt-4">
+                <div class="card-header">Analytics</div>
+                <div class="card-body">
+                    <div class="filter-buttons">
+                        <button class="btn btn-secondary btn-sm" onclick="updateCharts('weekly')">Weekly</button>
+                        <button class="btn btn-secondary btn-sm" onclick="updateCharts('monthly')">Monthly</button>
+                        <button class="btn btn-secondary btn-sm" onclick="updateCharts('yearly')">Yearly</button>
+                    </div>
+                    <div class="graph-container">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                    <div class="graph-container mt-4">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <div class="graph-container mt-4">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 BriefCase Software. All rights reserved.</p>
+    </footer>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Dark Mode Toggle Script -->
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('change', function () {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('sidebar').classList.toggle('dark-mode');
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.toggle('dark-mode'));
+        });
+    </script>
+
+    <!-- Chart.js Script -->
+    <script>
+        // Chart.js example data (you'll replace this with your own)
+        const ctxLine = document.getElementById('lineChart').getContext('2d');
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+
+        const lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'Cases Over Time',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    borderColor: '#007bff',
+                    fill: false
+                }]
+            }
+        });
+
+        const barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Client A', 'Client B', 'Client C', 'Client D'],
+                datasets: [{
+                    label: 'Client Performance',
+                    data: [50, 60, 70, 90],
+                    backgroundColor: '#007bff'
+                }]
+            }
+        });
+
+        const pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Open', 'Closed', 'Pending'],
+                datasets: [{
+                    label: 'Case Status',
+                    data: [60, 30, 10],
+                    backgroundColor: ['#007bff', '#28a745', '#ffc107']
+                }]
+            }
+        });
+
+        function updateCharts(period) {
+            // Logic to update the charts based on the selected period (e.g., weekly, monthly)
+        }
+
+        function searchFunction() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const clients = document.querySelectorAll('.client-item');
+            const cases = document.querySelectorAll('.case-item');
+            const documents = document.querySelectorAll('.document-item');
+
+            clients.forEach(client => {
+                const clientName = client.textContent.toLowerCase();
+                client.style.display = clientName.includes(input) ? '' : 'none';
+            });
+
+            cases.forEach(caseItem => {
+                const caseName = caseItem.textContent.toLowerCase();
+                caseItem.style.display = caseName.includes(input) ? '' : 'none';
+            });
+
+            documents.forEach(doc => {
+                const docName = doc.textContent.toLowerCase();
+                doc.style.display = docName.includes(input) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
