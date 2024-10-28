@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LegAlly Loader</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0d0f1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    #canvas {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: #0d0f1a;
+    }
+
+    .loader-text {
+      font-size: 3.5em;
+      color: #04c2c9;
+      font-family: 'Orbitron', sans-serif;
+      position: absolute;
+      opacity: 0;
+      text-align: center;
+      transition: opacity 1.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div class="loader-text" id="loaderText">LegAlly</div>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 500; 
+    const mouse = { x: null, y: null, radius: 120 };
+    let animationStage = 'L'; 
+
+    class Particle {
+      constructor(x, y, targetX, targetY) {
+        this.x = x;
+        this.y = y;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.size = 2;
+        this.color = "rgba(4, 194, 201, 0.9)";
+        this.density = (Math.random() * 30) + 1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      update() {
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < mouse.radius) {
+          this.x -= dx / 8;
+          this.y -= dy / 8;
+        } else {
+          if (this.x !== this.targetX) {
+            const dx = this.x - this.targetX;
+            this.x -= dx / 10;
+          }
+          if (this.y !== this.targetY) {
+            const dy = this.y - this.targetY;
+            this.y -= dy / 10;
+          }
+        }
+        this.draw();
+      }
+    }
+
+    // Define points for "L", "LegAlly", and scales of justice symbol
+    function loadParticles() {
+      const margin = 100;
+      for (let i = 0; i < particleCount; i++) {
+        // Random position and target coordinates for "L"
+        const x = (canvas.width / 2 - margin) + (Math.random() * 40 - 20);
+        const y = (canvas.height / 2 - margin) + (Math.random() * 120 - 60);
+
+        particles.push(new Particle(x, y, x, y));
+      }
+    }
+
+    function morphToLegAlly() {
+      animationStage = 'LegAlly';
+
+      // Reconfigure particles for "LegAlly" text
+      particles.forEach((particle, i) => {
+        particle.targetX = (canvas.width / 2 - 180) + (i % 8) * 20;
+        particle.targetY = (canvas.height / 2 - 100) + Math.floor(i / 8) * 20;
+
+        if (i % 10 === 0) {
+          particle.color = '#FFD700'; 
+        }
+      });
+    }
+
+    // Load Justice scale symbol on the right side
+    function addJusticeScaleSymbol() {
+      particles.forEach((particle, i) => {
+        if (i < 100) {
+          particle.targetX = (canvas.width / 2 + 200) + (i % 10) * 10;
+          particle.targetY = (canvas.height / 2 - 50) + Math.floor(i / 10) * 10;
+        }
+      });
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((particle) => particle.update());
+      requestAnimationFrame(animateParticles);
+    }
+
+    function revealText() {
+      const loaderText = document.getElementById("loaderText");
+      loaderText.style.opacity = 1;
+
+      setTimeout(() => {
+        window.location.href = 'home.html';
+      }, 2000);
+    }
+
+    // Initialize and animate particle effect
+    function initializeLoader() {
+      loadParticles();
+      animateParticles();
+
+      // Stages of the loader
+      setTimeout(morphToLegAlly, 2000); 
+      setTimeout(addJusticeScaleSymbol, 4000); 
+      setTimeout(revealText, 6000);
+    }
+
+    // Event listener for interaction
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
+    });
+
+    // Resize the canvas on window resize
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      loadParticles(); 
+    });
+
+    // Start the loader animation
+    initializeLoader();
+  </script>
+</body>
+</html>
