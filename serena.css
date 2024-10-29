@@ -1,0 +1,190 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Chat container */
+.container {
+    width: 90%; /* Ensures it takes 90% of the screen width */
+    max-width: 600px; /* Sets a maximum width for larger screens */
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    height: auto; /* Allow height to adjust automatically */
+}
+
+/* Chat header */
+.chat-header {
+    padding: 10px;
+    font-size: 2rem;
+    color: #444;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    margin-bottom: 15px;
+}
+
+/* Chat box */
+.chatbox {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 25rem; 
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Chat message styles */
+.message-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Message bubble styles */
+.message-bubble {
+    max-width: 70%;
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    word-wrap: break-word; 
+}
+
+/* Received message */
+.message-left {
+    background-color: #a8d0e6; 
+    color: #333;
+    margin-right: auto;
+}
+
+/* Sent message */
+.message-right {
+    background-color: #b9e4c5; 
+    color: #333;
+    margin-left: auto;
+}
+
+/* Profile picture 
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+} */
+/* Chat input form */
+.input-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.input-field {
+    flex-grow: 1;
+    padding: 15px;
+    border-radius: 25px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #333;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-field::placeholder {
+    color: rgba(51, 51, 51, 0.7);
+}
+
+.send-button {
+    padding: 15px 25px;
+    border-radius: 50px;
+    background-color: #6a82fb; 
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #4e4eb1; 
+}
+
+/* Contact section */
+.contact-section {
+    margin-top: 20px;
+}
+
+.contact-button {
+    padding: 10px 15px;
+    border-radius: 50px;
+    background-color: #ff3366; 
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 5px;
+}
+
+.contact-button:hover {
+    background-color: #ff1a4d; 
+}
+
+/* Tea section */
+.tea-section {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.tea-message {
+    margin: 0;
+    font-style: italic;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        width: 95%; /* Slightly wider on smaller screens */
+        padding: 15px; /* Reduced padding */
+    }
+
+    .chat-header {
+        font-size: 1.8rem; /* Smaller font size for header */
+    }
+
+    .message-bubble {
+        padding: 10px; /* Reduced padding for messages */
+    }
+
+    .send-button {
+        font-size: 0.9rem; /* Smaller font size for button */
+    }
+
+    .input-field {
+        font-size: 14px; /* Smaller font size for input */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 100%; /* Full width for very small screens */
+    }
+
+    .chat-header {
+        font-size: 1.6rem; /* Even smaller for very small screens */
+    }
+
+    .message-bubble {
+        max-width: 85%; /* Allow more width for messages */
+    }
+}
