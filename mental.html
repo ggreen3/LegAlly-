@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Serena-AI Therapist</title>
+  <link href="serena.css" rel="stylesheet" />
+    <link rel="icon" href="c:\Users\LENOVO\Downloads\serena.jpg" type="image/jpeg">
+</head>
+<body>
+  <div class="container">
+    <div class="chat-header">Serena,<br> Your virtual AI Therapist</div>
+    <div id="chatbox" class="chatbox"></div>
+    <div class="input-container">
+      <input id="messageInput" class="input-field" type="text" placeholder="Type your message..." />
+      <button id="sendButton" class="send-button">Send</button>
+    </div>
+    <div class="contact-section">
+      <button id="whatsappButton" class="contact-button">Message Me</button>
+      <button id="callButton" class="contact-button">Call Me</button>
+    </div>
+    <div class="tea-section">
+      <p class="tea-message">Feeling generous? 🍵 Angusha za kabej to my M-Pesa number: <strong>0746779950</strong>. Send money!</br>Rest easy ,no data is stored or sent anywhere else past your current session-</br>Ggreen</p>
+    </div>
+  </div>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const messageInput = document.getElementById("messageInput");
+    const sendButton = document.getElementById("sendButton");
+    const chatId = crypto.randomUUID();
+
+    let receiving = false;
+    const systemPrompt = "You are Serena, a compassionate AI therapist. Greet first-time users warmly, listen carefully, offer empathetic responses, and validate their feelings. Gently encourage reflection and suggest professional help when appropriate, fostering trust and support.";
+
+    function createMessageElement(text, alignment) {
+  const messageRow = document.createElement("div");
+  messageRow.className = `message-row ${alignment === "left" ? "message-left" : "message-right"}`;
+
+ // Create an avatar container for the smiley face emoji
+const avatarContainer = document.createElement("div");
+avatarContainer.className = "avatar-container";
+
+avatarContainer.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="40" height="40" fill="none">
+    <!-- Head (circular face) -->
+    <circle cx="32" cy="32" r="30" fill="#FFEB3B"/>
+
+    <!-- Eyes -->
+    <circle cx="22" cy="24" r="4" fill="#333"/>
+    <circle cx="42" cy="24" r="4" fill="#333"/>
+
+    <!-- Smile -->
+    <path d="M20 38 Q32 48, 44 38" stroke="#333" stroke-width="4" fill="none"/>
+  </svg>
+`;
+  const messageBubble = document.createElement("div");
+  messageBubble.className = `message-bubble ${alignment === "left" ? "message-left" : "message-right"}`;
+  messageBubble.textContent = text;
+
+  // Append SVG to the message row
+  if (alignment === "left") {
+    messageRow.appendChild(avatarContainer);
+    messageRow.appendChild(messageBubble);
+  } else {
+    messageRow.appendChild(messageBubble);
+    messageRow.appendChild(avatarContainer);
+  }
+
+  return messageRow;
+}
+
+
+    function connectWebSocket(message) {
+      receiving = true;
+      const url = "wss://backend.buildpicoapps.com/api/chatbot/chat";
+      const websocket = new WebSocket(url);
+
+      websocket.addEventListener("open", () => {
+        websocket.send(
+          JSON.stringify({
+            chatId: chatId,
+            appId: "after-consumer",
+            systemPrompt: systemPrompt,
+            message: message,
+          })
+        );
+      });
+
+      const messageElement = createMessageElement("", "left",   "right",
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="white">
+         <circle cx="12" cy="12" r="12" fill="#ff66b3"/>
+         <text x="50%" y="50%" text-anchor="middle" fill="white" dy=".3em" font-size="12">S</text>
+       </svg>`);
+      chatbox.appendChild(messageElement);
+
+      websocket.onmessage = (event) => {
+        const responseText = event.data;
+        messageElement.innerText += responseText;
+        chatbox.scrollTop = chatbox.scrollHeight;
+      };
+
+      websocket.onclose = (event) => {
+        if (event.code === 1000) {
+          receiving = false;
+        } else {
+          messageElement.textContent += " Error getting response from server. Refresh the page and try again.";
+          chatbox.scrollTop = chatbox.scrollHeight;
+          receiving = false;
+        }
+      };
+    }
+
+    sendButton.addEventListener("click", () => {
+      if (!receiving && messageInput.value.trim() !== "") {
+        const messageText = messageInput.value.trim();
+        messageInput.value = "";
+        const messageElement = createMessageElement(messageText,   "right",
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="white">
+         <circle cx="12" cy="12" r="12" fill="#ff66b3"/>
+         <text x="50%" y="50%" text-anchor="middle" fill="white" dy=".3em" font-size="12">S</text>
+       </svg>`);
+        chatbox.appendChild(messageElement);
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        connectWebSocket(messageText);
+      }
+    });
+
+    messageInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !receiving && messageInput.value.trim() !== "") {
+        event.preventDefault();
+        sendButton.click();
+      }
+    });
+
+    document.getElementById("whatsappButton").onclick = function() {
+      window.open("https://wa.me/+254 759 725841", "_blank");
+    };
+
+    document.getElementById("callButton").onclick = function() {
+      window.location.href = "tel:0746779950";
+    };
+  </script>
+  NUMBER OF USERS:
+  <script src="https://cdn.vercel.analytics/analytics.js" async></script>
+<script>
+  window.vercelAnalytics = {
+    projectId: "prj_fHox0Imzoz9Tdpckhi1vEExlQUsa",
+  };
+</script>
+<!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com" target="_blank">
+<img src="https://hitwebcounter.com/counter/counter.php?page=16962038&style=0025&nbdigits=9&type=page&initCount=0" title="Counter Widget" Alt="Visit counter For Websites"   border="0" /></a> 
+</body>
+</html>
