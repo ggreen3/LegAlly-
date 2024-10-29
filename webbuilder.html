@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Advanced Website Builder</title>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Elements</h2>
+    <div class="draggable" draggable="true" data-type="logo">Logo</div>
+    <div class="draggable" draggable="true" data-type="header">Header</div>
+    <div class="draggable" draggable="true" data-type="text-block">Text Block</div>
+    <div class="draggable" draggable="true" data-type="image-block">Image Block</div>
+    <div class="draggable" draggable="true" data-type="video-block">Video Block</div>
+    <div class="draggable" draggable="true" data-type="link-block">Link Block</div>
+    <div class="draggable" draggable="true" data-type="service-block">Service Block</div>
+    <div class="draggable" draggable="true" data-type="attorney-block">Attorney Profile</div>
+    <div class="draggable" draggable="true" data-type="contact-form">Contact Form</div>
+    <div class="draggable" draggable="true" data-type="testimonial">Testimonial</div>
+    <div class="draggable" draggable="true" data-type="section">Section</div>
+
+    <h3>Customization</h3>
+    <div id="customization-panel">
+      <div id="general-customization" class="customization-group">
+        <label for="element-width">Width:</label>
+        <input type="number" id="element-width" min="50" max="1000">
+        <label for="element-height">Height:</label>
+        <input type="number" id="element-height" min="50" max="1000">
+        <label for="bg-color">Background Color:</label>
+        <input type="color" id="bg-color" value="#ffffff">
+      </div>
+      <div id="text-customization" class="customization-group">
+        <label for="font-size">Font Size:</label>
+        <input type="number" id="font-size" min="10" max="100" value="16">
+        <label for="font-type">Font Type:</label>
+        <select id="font-type">
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Verdana">Verdana</option>
+        </select>
+        <label for="text-color">Text Color:</label>
+        <input type="color" id="text-color" value="#000000">
+      </div>
+      <div id="image-customization" class="customization-group">
+        <label for="image-src">Image Source:</label>
+        <input type="file" id="image-src" accept="image/*">
+      </div>
+      <div id="video-customization" class="customization-group">
+        <label for="video-src">Video Source:</label>
+        <input type="file" id="video-src" accept="video/*">
+      </div>
+      <div id="link-customization" class="customization-group">
+        <label for="link-url">Link URL:</label>
+        <input type="url" id="link-url" placeholder="https://example.com">
+        <label for="link-text">Link Text:</label>
+        <input type="text" id="link-text" placeholder="Link Text">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="save-button">Save</button>
+      <button id="load-button">Load</button>
+      <button id="preview-button">Preview</button>
+    </div>
+  </div>
+  <div class="canvas" id="canvas">
+    <h2>Drag elements here</h2>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
