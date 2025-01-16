@@ -11,114 +11,127 @@
             color: #edf2f7;
         }
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
         .card:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
         }
     </style>
     <title>Premium Signup</title>
     <link rel="icon" href="logo.jpg" type="image/jpeg">
 </head>
-<body class="flex flex-col items-center justify-center h-screen">
+<body class="flex flex-col items-center justify-center min-h-screen">
     <div class="text-center mb-8">
-        <h3 class="text-3xl font-bold mb-4">Premium Access</h3>
-        <p class="mb-6">Subscribe to our premium access to enjoy the best services. Choose from our various tiers below:</p>
+        <h3 class="text-3xl font-bold mb-4">LegAlly Premium Access</h3>
+        <p class="mb-6">Subscribe to our premium access tiers and unlock advanced features tailored to your needs:</p>
     </div>
 
-    <div class="grid grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
         <!-- Tier 1 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier1')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center">
             <h4 class="text-xl font-semibold mb-2">Tier 1: Basic</h4>
             <p class="text-lg mb-2">Ksh 10 per day</p>
-            <p>Access to basic services</p>
+            <p>Features:
+                <ul class="list-disc list-inside text-sm">
+                    <li>Access to basic legal models</li>
+                    <li>Basic OCR functionalities</li>
+                </ul>
+            </p>
+            <a href="https://google.com" class="mt-4 inline-block bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded">Subscribe Now</a>
         </div>
 
         <!-- Tier 2 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier2')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center">
             <h4 class="text-xl font-semibold mb-2">Tier 2: Standard</h4>
             <p class="text-lg mb-2">Ksh 25 per day</p>
-            <p>Access to additional services like local storage</p>
+            <p>Features:
+                <ul class="list-disc list-inside text-sm">
+                    <li>Access to standard legal models</li>
+                    <li>Local storage for documents</li>
+                    <li>Intermediate OCR validations</li>
+                </ul>
+            </p>
+            <a href="https://google.com" class="mt-4 inline-block bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded">Subscribe Now</a>
         </div>
 
         <!-- Tier 3 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier3')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center">
             <h4 class="text-xl font-semibold mb-2">Tier 3: Premium</h4>
             <p class="text-lg mb-2">Ksh 45 per day</p>
-            <p>Access to all premium services</p>
-        </div>
-
-        <!-- Tier 4 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier4')">
-            <h4 class="text-xl font-semibold mb-2">Tier 4: Enterprise</h4>
-            <p class="text-lg mb-2">Ksh 100 per week</p>
-            <p>Comprehensive services for professionals</p>
+            <p>Features:
+                <ul class="list-disc list-inside text-sm">
+                    <li>Access to all legal models</li>
+                    <li>Advanced OCR validations</li>
+                    <li>Extended local storage and memory features</li>
+                </ul>
+            </p>
+            <a href="https://google.com" class="mt-4 inline-block bg-blue-600 hover:bg-blue-800 text-white py-2 px-4 rounded">Subscribe Now</a>
         </div>
     </div>
 
-    <div id="paymentSection" class="hidden bg-gray-700 p-6 rounded-lg text-center">
-        <h4 class="text-xl font-semibold mb-4">Complete Your Payment</h4>
+    <div id="paymentSection" class="hidden bg-gray-700 p-4 rounded-lg text-center">
+        <h4 class="text-xl font-semibold mb-4">Upload Payment Screenshot</h4>
         <p id="paymentInstructions" class="mb-4"></p>
-        <form id="paymentForm" class="space-y-4">
-            <input type="text" id="name" name="name" placeholder="Your Name" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
-            <input type="email" id="email" name="email" placeholder="Your Email" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
-            <label class="block text-left text-sm text-gray-300">Upload Screenshot of Payment:</label>
+        <form id="premiumForm" class="space-y-4">
             <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+            <button type="button" onclick="processPayment()" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Validate Payment</button>
         </form>
-        <p id="thankYouMessage" class="text-green-400 mt-4" style="display:none;">Thank you for subscribing! Enjoy our services.</p>
+        <p id="validationResult" class="mt-4"></p>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
     <script>
-        function navigateToPayment(tier) {
-            let instructions;
-            switch (tier) {
-                case 'tier1':
-                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 1: Basic (Ksh 10/day).`;
-                    break;
-                case 'tier2':
-                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 2: Standard (Ksh 25/day).`;
-                    break;
-                case 'tier3':
-                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 3: Premium (Ksh 45/day).`;
-                    break;
-                case 'tier4':
-                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 4: Enterprise (Ksh 100/week).`;
-                    break;
-            }
-
-            document.getElementById('paymentInstructions').innerHTML = instructions;
-            document.getElementById('paymentSection').classList.remove('hidden');
-        }
-
-        document.getElementById('paymentForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
+        function processPayment() {
             const fileInput = document.getElementById('paymentScreenshot');
             const file = fileInput.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageData = e.target.result;
-
-                    // Placeholder for OCR validation logic
-                    const isValidPayment = true; // Replace with actual OCR logic to validate payment
-
-                    if (isValidPayment) {
-                        document.getElementById('thankYouMessage').style.display = 'block';
-                        document.getElementById('paymentForm').style.display = 'none';
-                        alert('Payment validated successfully!');
-                    } else {
-                        alert('Invalid payment details. Please try again.');
-                    }
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert('Please upload a screenshot of your payment.');
+            if (!file) {
+                alert('Please upload a screenshot of the payment.');
+                return;
             }
-        });
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const image = event.target.result;
+                Tesseract.recognize(
+                    image,
+                    'eng',
+                    {
+                        logger: info => console.log(info) // Progress logger
+                    }
+                ).then(({ data: { text } }) => {
+                    console.log('Extracted Text:', text);
+
+                    // Basic validation example
+                    if (text.includes('LegAlly') && text.includes('Ksh') && text.includes('25')) {
+                        document.getElementById('validationResult').innerText = 'Payment successfully validated for Tier 2.';
+                        // Unlock additional features for Tier 2
+                        unlockFeatures('tier2');
+                    } else {
+                        document.getElementById('validationResult').innerText = 'Invalid payment details. Please try again.';
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('validationResult').innerText = 'Error processing the payment screenshot.';
+                });
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function unlockFeatures(tier) {
+            if (tier === 'tier2') {
+                alert('Tier 2 features activated: Local storage and intermediate OCR enabled. Subscription valid for 24 hours.');
+                // Start time tracking logic
+                startSubscriptionTimer(24 * 60 * 60 * 1000); // 24 hours in milliseconds
+            }
+            // Add logic for other tiers
+        }
+
+        function startSubscriptionTimer(duration) {
+            setTimeout(() => {
+                alert('Your subscription has expired. Please renew to continue enjoying premium features.');
+            }, duration);
+        }
     </script>
 </body>
 </html>
