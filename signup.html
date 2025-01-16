@@ -11,68 +11,80 @@
             color: #edf2f7;
         }
         .card {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
     </style>
     <title>Premium Signup</title>
-      <link rel="icon" href="logo.jpg" type="image/jpeg">
+    <link rel="icon" href="logo.jpg" type="image/jpeg">
 </head>
 <body class="flex flex-col items-center justify-center h-screen">
     <div class="text-center mb-8">
-        <h3 class="text-2xl font-bold mb-4">Premium Access</h3>
-        <p class="mb-6">Subscribe to our premium access to get the latest models. Choose from our various tiers:</p>
+        <h3 class="text-3xl font-bold mb-4">Premium Access</h3>
+        <p class="mb-6">Subscribe to our premium access to enjoy the best services. Choose from our various tiers below:</p>
     </div>
 
-    <div class="flex space-x-4 mb-6">
+    <div class="grid grid-cols-2 gap-6 mb-8">
         <!-- Tier 1 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="showTier('tier1')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier1')">
             <h4 class="text-xl font-semibold mb-2">Tier 1: Basic</h4>
             <p class="text-lg mb-2">Ksh 10 per day</p>
-            <p>Access to basic models</p>
+            <p>Access to basic services</p>
         </div>
 
         <!-- Tier 2 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="showTier('tier2')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier2')">
             <h4 class="text-xl font-semibold mb-2">Tier 2: Standard</h4>
             <p class="text-lg mb-2">Ksh 25 per day</p>
-            <p>Access to standard models</p>
+            <p>Access to additional services like local storage</p>
         </div>
 
         <!-- Tier 3 Card -->
-        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="showTier('tier3')">
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier3')">
             <h4 class="text-xl font-semibold mb-2">Tier 3: Premium</h4>
             <p class="text-lg mb-2">Ksh 45 per day</p>
-            <p>Access to all models</p>
+            <p>Access to all premium services</p>
+        </div>
+
+        <!-- Tier 4 Card -->
+        <div class="card bg-gray-800 p-6 rounded-lg shadow-lg text-center cursor-pointer" onclick="navigateToPayment('tier4')">
+            <h4 class="text-xl font-semibold mb-2">Tier 4: Enterprise</h4>
+            <p class="text-lg mb-2">Ksh 100 per week</p>
+            <p>Comprehensive services for professionals</p>
         </div>
     </div>
 
-    <div id="paymentSection" class="hidden bg-gray-700 p-4 rounded-lg text-center">
-        <h4 class="text-xl font-semibold mb-4">Sign up for Premium</h4>
+    <div id="paymentSection" class="hidden bg-gray-700 p-6 rounded-lg text-center">
+        <h4 class="text-xl font-semibold mb-4">Complete Your Payment</h4>
         <p id="paymentInstructions" class="mb-4"></p>
-        <form id="premiumForm" class="space-y-4">
+        <form id="paymentForm" class="space-y-4">
             <input type="text" id="name" name="name" placeholder="Your Name" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
             <input type="email" id="email" name="email" placeholder="Your Email" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
-            <input type="text" id="reference" name="reference" placeholder="M-Pesa Payment Reference" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
-            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Sign Up</button>
+            <label class="block text-left text-sm text-gray-300">Upload Screenshot of Payment:</label>
+            <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*" class="w-full p-2 rounded bg-gray-800 border border-gray-600 text-white" required>
+            <button type="submit" class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Submit</button>
         </form>
-        <p id="thankYouMessage" class="text-green-400 mt-4" style="display:none;">Thank you for signing up!</p>
+        <p id="thankYouMessage" class="text-green-400 mt-4" style="display:none;">Thank you for subscribing! Enjoy our services.</p>
     </div>
 
     <script>
-        function showTier(tier) {
+        function navigateToPayment(tier) {
             let instructions;
             switch (tier) {
                 case 'tier1':
-                    instructions = 'Send payment via M-Pesa to number: <strong>0746779950</strong> for Tier 1 (Ksh 10 per day) and enter the reference number below:';
+                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 1: Basic (Ksh 10/day).`;
                     break;
                 case 'tier2':
-                    instructions = 'Send payment via M-Pesa to number: <strong>0746779950</strong> for Tier 2 (Ksh 25 per day) and enter the reference number below:';
+                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 2: Standard (Ksh 25/day).`;
                     break;
                 case 'tier3':
-                    instructions = 'Send payment via M-Pesa to number: <strong>0746779950</strong> for Tier 3 (Ksh 45 per day) and enter the reference number below:';
+                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 3: Premium (Ksh 45/day).`;
+                    break;
+                case 'tier4':
+                    instructions = `Visit <a href='https://google.com' target='_blank' class='text-blue-400'>this link</a> to subscribe to Tier 4: Enterprise (Ksh 100/week).`;
                     break;
             }
 
@@ -80,42 +92,32 @@
             document.getElementById('paymentSection').classList.remove('hidden');
         }
 
-        // Handle form submission
-        document.getElementById('premiumForm').addEventListener('submit', function(event) {
+        document.getElementById('paymentForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const reference = document.getElementById('reference').value;
+            const fileInput = document.getElementById('paymentScreenshot');
+            const file = fileInput.files[0];
 
-            const requestData = {
-                subject: "New Premium Signup",
-                body: `<p>Premium Signup Details:</p><ul><li>Name: ${name}</li><li>Email: ${email}</li><li>Payment Reference: ${reference}</li></ul>`,
-                to: "dgeorgeobu@gmail.com"
-            };
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
 
-            fetch("https://backend.buildpicoapps.com/aero/run/self-email-api?pk=v1-Z0FBQUFBQm1XYWNNN1N1T09oRWdNTDNMTERVOUI4bEFSWWRkSURVdXdCSDhaMjJ3RjdSSkxvRjZoc2d4eXlNVkhnV05vQWxMelRBTjZiRi0wb2JkNHZ0WlM1V3pGdzhOUUE9PQ==", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    alert('Premium signup submitted successfully!');
-                    document.getElementById('premiumForm').style.display = 'none';
-                    document.getElementById('thankYouMessage').style.display = 'block';
-                } else {
-                    alert('There was an error submitting your signup. Please try again.');
-                    console.error(data);
-                }
-            })
-            .catch(error => {
-                alert('There was an error submitting your signup. Please try again.');
-                console.error(error);
-            });
+                    // Placeholder for OCR validation logic
+                    const isValidPayment = true; // Replace with actual OCR logic to validate payment
+
+                    if (isValidPayment) {
+                        document.getElementById('thankYouMessage').style.display = 'block';
+                        document.getElementById('paymentForm').style.display = 'none';
+                        alert('Payment validated successfully!');
+                    } else {
+                        alert('Invalid payment details. Please try again.');
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a screenshot of your payment.');
+            }
         });
     </script>
 </body>
